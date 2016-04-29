@@ -34,6 +34,11 @@ public class ResizedImagePanel extends JPanel {
             final int x = (getWidth() - drawme.getWidth(this)) / 2;
             final int y = (getHeight() - drawme.getHeight(this)) / 2;
             g.drawImage(drawme, x, y, this);
+            
+            g.setColor(Color.black);
+            g.fillRect(0,0, x, getHeight());
+            final int ex = x+drawme.getWidth(this);
+            g.fillRect(ex,0, getWidth()-ex, getHeight());
         }
         
         if (overlay != null) {
