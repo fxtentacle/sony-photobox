@@ -15,6 +15,7 @@ public class CameraRemote extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private Liveview liveview;
     private JLabel image;
 
     final String url;
@@ -61,6 +62,7 @@ public class CameraRemote extends JDialog {
         System.out.println(result2);
 
         final String liveViewURL = result2.getJSONArray("result").getString(0);
+        liveview.init(liveViewURL);
         
         setContentPane(contentPane);
         setModal(true);
@@ -152,10 +154,10 @@ public class CameraRemote extends JDialog {
         final String url = picture.getJSONArray("result").getJSONArray(0).getString(0).replace("\\/", "/");
         System.out.println(url);
 
-            ImageIcon img = new ImageIcon(new URL(url));
-            image.setIcon(new ImageIcon(img.getImage().getScaledInstance(600,400, Image.SCALE_AREA_AVERAGING)));
-            image.setText("");
-            pack();
+            //ImageIcon img = new ImageIcon(new URL(url));
+           // image.setIcon(new ImageIcon(img.getImage().getScaledInstance(600,400, Image.SCALE_AREA_AVERAGING)));
+           // image.setText("");
+            // pack();
         }catch (Exception e) {
             e.printStackTrace();
         }
