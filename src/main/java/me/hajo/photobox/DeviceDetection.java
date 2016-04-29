@@ -1,6 +1,5 @@
 package me.hajo.photobox;
 
-import javafx.scene.Camera;
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.model.message.header.ServiceTypeHeader;

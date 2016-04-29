@@ -19,11 +19,11 @@
     </repositories>
 
     <dependencies>
-    <dependency>
-        <groupId>org.json</groupId>
-        <artifactId>json</artifactId>
-        <version>20160212</version>
-    </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
+        </dependency>
         <dependency>
             <groupId>org.fourthline.cling</groupId>
             <artifactId>cling-core</artifactId>
@@ -43,7 +43,6 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -61,7 +60,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>me.hajo.photobox.DeviceDetection</mainClass>
+                            <mainClass>me.hajo.photobox.UploadTest</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -79,7 +78,7 @@
                             <attachToBuild>true</attachToBuild>
                             <!-- Optional, default is "onejar" -->
                             <classifier>onejar</classifier>
-                            <filename>photobox-${version}.jar</filename>
+                            <filename>photobox-upload-test-${version}.jar</filename>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>
@@ -89,12 +88,11 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <pluginRepositories>
         <pluginRepository>
             <id>onejar-maven-plugin.googlecode.com</id>
             <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
         </pluginRepository>
     </pluginRepositories>
-    
 </project>
