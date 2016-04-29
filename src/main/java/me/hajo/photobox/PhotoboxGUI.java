@@ -29,9 +29,12 @@ public class PhotoboxGUI extends JFrame {
     final java.util.Timer timer = new java.util.Timer();
     final BufferedImage waitImage;
     final Clip countdownBeep;
+    final FileUploader uploader;
 
-    public PhotoboxGUI(CameraRemote remote) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+    public PhotoboxGUI(CameraRemote remote, FileUploader uploader) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
         this.remote = remote;
+        this.uploader = uploader;
+        
         this.waitImage = new JPEGImageDecoderImpl(PhotoboxGUI.class.getResourceAsStream("/wait.jpg")).decodeAsBufferedImage();
         this.countdownBeep = AudioSystem.getClip();
         countdownBeep.open(AudioSystem.getAudioInputStream(PhotoboxGUI.class.getResourceAsStream("/beep.wav")));
@@ -106,7 +109,7 @@ public class PhotoboxGUI extends JFrame {
     
     public void sendPicture() {
         if(currentPostviewImageData != null) {
-            //uploader.send(currentPostviewImageData);
+            uploader.upload(currentPostviewImageData);
         }
         returnToTakePicture();
     }
