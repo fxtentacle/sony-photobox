@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c5b6eb8b-56e4-469b-bfb2-591d624d744c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java" afterPath="$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/me/hajo/photobox/Liveview.java" afterPath="$PROJECT_DIR$/src/main/java/me/hajo/photobox/Liveview.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/me/hajo/photobox/PhotoboxGUI.java" afterPath="$PROJECT_DIR$/src/main/java/me/hajo/photobox/PhotoboxGUI.java" />
     </list>
     <ignored path="sony-photobox.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,15 +26,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DeviceDetection.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DeviceDetection.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.5555556">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.22297297">
+              <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3367#4182#0" expanded="true" />
-                <element signature="e#4181#4182#0" expanded="true" />
+                <element signature="e#3473#4131#0" expanded="true" />
+                <element signature="e#4130#4131#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -114,10 +109,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7151899">
+            <state vertical-scroll-proportion="-14.125">
               <caret line="63" column="71" selection-start-line="63" selection-start-column="71" selection-end-line="63" selection-end-column="71" />
               <folding />
             </state>
@@ -186,11 +181,11 @@
         <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/FileUploader.java" />
         <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/UploadTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/ResizedImagePanel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java" />
         <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/PhotoboxGUI.java" />
         <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/Liveview.java" />
         <option value="$PROJECT_DIR$/pom_upload_test.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java" />
       </list>
     </option>
   </component>
@@ -1101,12 +1096,12 @@
       <workItem from="1460492527397" duration="143000" />
       <workItem from="1460492812551" duration="5837000" />
       <workItem from="1461938918814" duration="639000" />
-      <workItem from="1461939685329" duration="10710000" />
+      <workItem from="1461939685329" duration="10900000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19303000" />
+    <option name="totallyTimeSpent" value="19493000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="23" width="1386" height="877" extended-state="0" />
@@ -1515,18 +1510,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5555556">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3367#4182#0" expanded="true" />
-            <element signature="e#4181#4182#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/me/hajo/photobox/CameraRemote.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1586,9 +1569,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7151899">
+        <state vertical-scroll-proportion="-14.125">
           <caret line="63" column="71" selection-start-line="63" selection-start-column="71" selection-end-line="63" selection-end-column="71" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/me/hajo/photobox/DeviceDetection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22297297">
+          <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3473#4131#0" expanded="true" />
+            <element signature="e#4130#4131#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
