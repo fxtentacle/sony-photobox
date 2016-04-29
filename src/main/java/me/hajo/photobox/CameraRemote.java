@@ -3,115 +3,112 @@ package me.hajo.photobox;
 import org.json.JSONObject;
 import sun.misc.IOUtils;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 
-public class CameraRemote extends JDialog {
-    private JPanel contentPane;
-    private JButton buttonOK;
-    private JButton buttonCancel;
-    private Liveview liveview;
-    private JLabel image;
+public class CameraRemote {
+    final String baseURL;
 
-    final String url;
-    public CameraRemote(String urli) throws IOException {
-        url = urli;
+    public CameraRemote(String baseURL) throws IOException {
+        this.baseURL = baseURL;
+    }
+    
+    public void start() throws IOException {
+        startRecMode();
+        waitUntilCameraIsIDLE();
 
+        setShootModeStill();
+        waitUntilCameraIsIDLE();
 
-        final String startRecMode = "{\n" +
-                "    \"method\": \"startRecMode\",\n" +
+        setPostviewImageSizeOriginal();
+        waitUntilCameraIsIDLE();
+    }
+    
+    // start stop liveview
+    
+    public String takePictureAndGetURL() throws IOException {
+        final JSONObject picture = cameraCallP("{\n" +
+                "    \"method\": \"actTakePicture\",\n" +
                 "    \"params\": [],\n" +
                 "    \"id\": 1,\n" +
                 "    \"version\": \"1.0\"\n" +
-                "}";
-        final String result = cameraCall(url, startRecMode);
-        System.out.println(result);
+                "}");
+        return picture.getJSONArray("result").getJSONArray(0).getString(0).replace("\\/", "/");
+    }
+    
+    public void stop() throws IOException {
+        stopRecMode();
+    }
+    
+    
 
-       waitCameraIDLE();
-
-        System.out.println(cameraCallRetryNAN(url, "{\n" +
-                "    \"method\": \"setShootMode\",\n" +
-                "    \"params\": [\"still\"],\n" +
+    public void stopRecMode() throws IOException {
+        System.out.println(cameraCall("{\n" +
+                "    \"method\": \"stopRecMode\",\n" +
+                "    \"params\": [],\n" +
                 "    \"id\": 1,\n" +
                 "    \"version\": \"1.0\"\n" +
                 "}"));
+    }
 
-        waitCameraIDLE();
-
-        System.out.println(cameraCallRetryNAN(url, "{\n" +
-                "    \"method\": \"setPostviewImageSize\",\n" +
-                "    \"params\": [\"Original\"],\n" +
+    public void stopLiveView() throws IOException {
+        System.out.println(cameraCall("{\n" +
+                "    \"method\": \"stopLiveview\",\n" +
+                "    \"params\": [],\n" +
                 "    \"id\": 1,\n" +
                 "    \"version\": \"1.0\"\n" +
                 "}"));
+    }
 
-        waitCameraIDLE();
-
+    public String startLiveViewAndGetURL() throws IOException {
         final String startLiveView = "{\n" +
                 "    \"method\": \"startLiveview\",\n" +
                 "    \"params\": [],\n" +
                 "    \"id\": 1,\n" +
                 "    \"version\": \"1.0\"\n" +
                 "}";
-        final JSONObject result2 = cameraCallP(url, startLiveView);
+        final JSONObject result2 = cameraCallP(startLiveView);
         System.out.println(result2);
-
-        final String liveViewURL = result2.getJSONArray("result").getString(0);
-        liveview.init(liveViewURL);
-        
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
-
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-// call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-// call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        return result2.getJSONArray("result").getString(0);
     }
 
-    private String cameraCallRetryNAN(String url, String s) throws IOException {
-        String r;
-        JSONObject rr;
-        do {
-            r = cameraCall(url, s);
-            rr = new JSONObject(r);
-        } while(rr.has("error") && rr.getJSONArray("error").getString(1).equals("Not Available Now"));
-        return r;
+    public void setPostviewImageSizeOriginal() throws IOException {
+        System.out.println(cameraCallRetryNAN("{\n" +
+                "    \"method\": \"setPostviewImageSize\",\n" +
+                "    \"params\": [\"Original\"],\n" +
+                "    \"id\": 1,\n" +
+                "    \"version\": \"1.0\"\n" +
+                "}"));
     }
 
-    private void waitCameraIDLE() {
+    public void setShootModeStill() throws IOException {
+        System.out.println(cameraCallRetryNAN("{\n" +
+                "    \"method\": \"setShootMode\",\n" +
+                "    \"params\": [\"still\"],\n" +
+                "    \"id\": 1,\n" +
+                "    \"version\": \"1.0\"\n" +
+                "}"));
+    }
+
+    public void startRecMode() throws IOException {
+        final String startRecMode = "{\n" +
+                "    \"method\": \"startRecMode\",\n" +
+                "    \"params\": [],\n" +
+                "    \"id\": 1,\n" +
+                "    \"version\": \"1.0\"\n" +
+                "}";
+        final String result = cameraCall(startRecMode);
+        System.out.println(result);
+    }
+
+
+    public void waitUntilCameraIsIDLE() {
         JSONObject event = null;
         boolean wait = false;
         try {
             while(true) {
-                event = cameraCallP(url, "{\n" +
+                event = cameraCallP("{\n" +
                         "    \"method\": \"getEvent\",\n" +
                         "    \"params\": ["+(wait?"true":"false")+"],\n" +
                         "    \"id\": 1,\n" +
@@ -122,69 +119,31 @@ public class CameraRemote extends JDialog {
                 if(status.equals("IDLE")) return;
                 wait = true;
             }
-            
         }catch (Exception e) {
-            e.printStackTrace();
-            if(event != null) System.out.println(event);
+            throw new HajoRestartException(e);
         }
     }
 
-    private String cameraCall(String url, String payload) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+
+    private JSONObject cameraCallRetryNAN(String s) throws IOException {
+        JSONObject rr;
+        do {
+            rr = cameraCallP(s);
+        } while(rr.has("error") && rr.getJSONArray("error").getString(1).equals("Not Available Now"));
+        return rr;
+    }
+    
+    private JSONObject cameraCallP(String payload)throws IOException {
+        return new JSONObject(cameraCall(payload));
+    }
+
+    private String cameraCall(final String payload) throws IOException {
+        final HttpURLConnection conn = (HttpURLConnection) new URL(baseURL).openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.connect();
         conn.getOutputStream().write(payload.getBytes());
         return new String(IOUtils.readFully(conn.getInputStream(), -1, false));
-    }
-    
-    private JSONObject cameraCallP(String url, String payload)throws IOException {
-        return new JSONObject(cameraCall(url,payload));
-    }
-
-
-    private void onOK() {
-        try {
-        final JSONObject picture = cameraCallP(url, "{\n" +
-                "    \"method\": \"actTakePicture\",\n" +
-                "    \"params\": [],\n" +
-                "    \"id\": 1,\n" +
-                "    \"version\": \"1.0\"\n" +
-                "}");
-        final String url = picture.getJSONArray("result").getJSONArray(0).getString(0).replace("\\/", "/");
-        System.out.println(url);
-
-            //ImageIcon img = new ImageIcon(new URL(url));
-           // image.setIcon(new ImageIcon(img.getImage().getScaledInstance(600,400, Image.SCALE_AREA_AVERAGING)));
-           // image.setText("");
-            // pack();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void onCancel() {
-
-        try {
-            System.out.println(cameraCall(url, "{\n" +
-                    "    \"method\": \"stopLiveview\",\n" +
-                    "    \"params\": [],\n" +
-                    "    \"id\": 1,\n" +
-                    "    \"version\": \"1.0\"\n" +
-                    "}"));
-            System.out.println(cameraCall(url, "{\n" +
-                    "    \"method\": \"stopRecMode\",\n" +
-                    "    \"params\": [],\n" +
-                    "    \"id\": 1,\n" +
-                    "    \"version\": \"1.0\"\n" +
-                    "}"));
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        dispose();
-        
-        System.exit(0);
     }
 
 }

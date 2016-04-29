@@ -1,13 +1,12 @@
 package me.hajo.photobox;
 
+import javafx.scene.Camera;
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.model.message.header.ServiceTypeHeader;
 import org.fourthline.cling.model.meta.LocalDevice;
 import org.fourthline.cling.model.meta.RemoteDevice;
 import org.fourthline.cling.model.meta.RemoteDeviceIdentity;
-import org.fourthline.cling.model.meta.RemoteService;
-import org.fourthline.cling.model.types.ServiceId;
 import org.fourthline.cling.model.types.ServiceType;
 import org.fourthline.cling.registry.Registry;
 import org.fourthline.cling.registry.RegistryListener;
@@ -16,14 +15,15 @@ import org.json.JSONObject;
 import org.json.XML;
 import sun.misc.IOUtils;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.Future;
 
 /**
  * Created by fxtentacle on 12.04.16.
  */
-public class SonyDD implements RegistryListener {
+public class DeviceDetection implements RegistryListener {
 
     final ServiceType type = new ServiceType("schemas-sony-com", "ScalarWebAPI", 1);
 
@@ -45,11 +45,14 @@ public class SonyDD implements RegistryListener {
             JSONArray services = desc.getJSONArray("av:X_ScalarWebAPI_Service");
             for(int i=0;i<services.length();i++) {
                 JSONObject t = services.getJSONObject(i);
-                if(t.getString("av:X_ScalarWebAPI_ServiceType").equals("camera"))
-                    cb.notifyCameraURL(t.getString("av:X_ScalarWebAPI_ActionList_URL")+"/camera");
+                if(t.getString("av:X_ScalarWebAPI_ServiceType").equals("camera")) {
+                    cb.notifyCameraURL(t.getString("av:X_ScalarWebAPI_ActionList_URL") + "/camera");
+                    registry.removeListener(this);
+                    registry.shutdown();
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new HajoRestartException(e);
         }
     }
 
@@ -75,7 +78,7 @@ public class SonyDD implements RegistryListener {
         public void notifyCameraURL(String url);
     }
     private CB cb;
-    public void findDD(CB cbi) {
+    public void findCamera(CB cbi) {
         cb = cbi;
         
         UpnpService upnpService = new UpnpServiceImpl();
@@ -88,15 +91,17 @@ public class SonyDD implements RegistryListener {
     }
     
     public static void main(String [] args) {
-        new SonyDD().findDD(new CB() {
+        new DeviceDetection().findCamera(new CB() {
             public void notifyCameraURL(String url) {
                 try {
-                    CameraRemote dialog = null;
-                    dialog = new CameraRemote(url);
-                    dialog.pack();
-                    dialog.setVisible(true);
+                    CameraRemote remote = new CameraRemote(url);
+                    PhotoboxGUI dialog = new PhotoboxGUI(remote);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new HajoRestartException(e);
+                } catch (UnsupportedAudioFileException e) {
+                    throw new HajoRestartException(e);
+                } catch (LineUnavailableException e) {
+                    throw new HajoRestartException(e);
                 }
             }
         });

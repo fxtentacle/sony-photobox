@@ -17,7 +17,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Liveview extends JLabel {
+public class Liveview extends ResizedImagePanel {
+    
     final BlockingQueue<byte[]> stream2decoder = new LinkedBlockingQueue<byte[]>(5);
     final BlockingQueue<Image> decoder2view = new LinkedBlockingQueue<Image>(5);
     
@@ -55,13 +56,14 @@ public class Liveview extends JLabel {
             try {
                 while(true) {
                     final Image img = decoder2view.take();
-                    setIcon(new ImageIcon(img));
+                    setImage(img);
                 }
             } catch (Exception e) {
                 throw new HajoRestartException(e);
             }
         }
-    };
+    }
+
     
     void init(String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
