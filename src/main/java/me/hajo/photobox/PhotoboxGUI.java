@@ -43,10 +43,10 @@ public class PhotoboxGUI extends JFrame {
         liveview.init(remote.startLiveViewAndGetURL());
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        //setUndecorated(true);
+        setUndecorated(true);
 
         final GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
-        //device.setFullScreenWindow(this);
+        device.setFullScreenWindow(this);
 
         liveview.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
