@@ -96,7 +96,7 @@ public class DeviceDetection implements RegistryListener {
             public void notifyCameraURL(String url) {
                 try {
                     String host = "127.0.0.1:5000";
-                    //host = JOptionPane.showInputDialog("Server IP/hostname:port (192.168.42.128:8765)");
+                    host = JOptionPane.showInputDialog("Server IP/hostname:port (192.168.42.128:8765)");
                     CameraRemote remote = new CameraRemote(url);
                     FileUploader uploader = new FileUploader(host);
                     PhotoboxGUI dialog = new PhotoboxGUI(remote,uploader);
