@@ -110,7 +110,36 @@ public class PhotoboxGUI extends JFrame {
     
     public void sendPicture() {
         if(currentPostviewImageData != null) {
-            uploader.upload(currentPostviewImageData);
+            int w = 1280;
+            int h = 853;
+            
+            BufferedImage tmp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2 = tmp.createGraphics();
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.drawImage(currentPostviewImage, 0, 0, w, h, null);
+            g2.dispose();
+
+            ByteArrayOutputStream writeme = new ByteArrayOutputStream();
+            final JPEGImageEncoderImpl enc = new JPEGImageEncoderImpl(writeme);
+            try {
+                enc.encode(tmp);
+            }catch (Exception e) {
+                throw new HajoRestartException(e);
+            }
+
+            final byte[] bytes = writeme.toByteArray();
+
+            /*
+            try {
+                FileOutputStream fos = new FileOutputStream(new File("/Users/fxtentacle/Downloads/t.jpg"));
+                fos.write(bytes);
+                fos.close();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            */
+
+            uploader.upload(bytes);
         }
         returnToTakePicture();
     }
