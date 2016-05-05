@@ -1,8 +1,11 @@
 package me.hajo.photobox;
 
 import sun.awt.image.codec.JPEGImageDecoderImpl;
+import sun.awt.image.codec.JPEGImageEncoderImpl;
 import sun.misc.IOUtils;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
@@ -12,8 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.TimerTask;
@@ -26,7 +28,7 @@ public class PhotoboxGUI extends JFrame {
     final Liveview liveview = new Liveview();
     final ResizedImagePanel postview = new ResizedImagePanel();
     final java.util.Timer timer = new java.util.Timer();
-    final BufferedImage waitImage;
+    final BufferedImage OKImage;
     final Clip countdownBeep;
     final FileUploader uploader;
 
@@ -34,7 +36,7 @@ public class PhotoboxGUI extends JFrame {
         this.remote = remote;
         this.uploader = uploader;
         
-        this.waitImage = new JPEGImageDecoderImpl(PhotoboxGUI.class.getResourceAsStream("/wait.jpg")).decodeAsBufferedImage();
+        this.OKImage = ImageIO.read(PhotoboxGUI.class.getResourceAsStream("/ok.png"));
         this.countdownBeep = AudioSystem.getClip();
         countdownBeep.open(AudioSystem.getAudioInputStream(PhotoboxGUI.class.getResourceAsStream("/beep.wav")));
         
@@ -114,6 +116,7 @@ public class PhotoboxGUI extends JFrame {
     }
     
     public void returnToTakePicture() {
+        postview.setImage2(null);
         remove(postview);
         add(liveview);
     }
@@ -157,6 +160,7 @@ public class PhotoboxGUI extends JFrame {
     }
 
     byte[] currentPostviewImageData;
+    BufferedImage currentPostviewImage;
     public void takePicture() {
         try {
             final String pictureURL = remote.takePictureAndGetURL();
@@ -164,15 +168,20 @@ public class PhotoboxGUI extends JFrame {
             remove(liveview);
             postview.setSize(liveview.getSize());
             add(postview);
-            postview.setOverlay(null);
-            postview.setImage(waitImage);
+            postview.setImage2(null);
+            postview.setOverlay("Warten ...");
+            postview.drawme = liveview.drawme;
+            postview.invalidate();
+            postview.repaint();
             
             final HttpURLConnection connection = (HttpURLConnection) new URL(pictureURL).openConnection();
             connection.connect();
             currentPostviewImageData = IOUtils.readFully(connection.getInputStream(), -1, false);
-            final BufferedImage image = new JPEGImageDecoderImpl(new ByteArrayInputStream(currentPostviewImageData)).decodeAsBufferedImage();
-            
-            postview.setImage(image);
+            currentPostviewImage = new JPEGImageDecoderImpl(new ByteArrayInputStream(currentPostviewImageData)).decodeAsBufferedImage();
+
+            postview.setOverlay(null);
+            postview.setImage2(OKImage);
+            postview.setImage(currentPostviewImage);
         } catch (IOException e) {
             throw new HajoRestartException(e);
         }
