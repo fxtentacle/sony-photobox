@@ -10,8 +10,9 @@ import java.awt.image.BufferedImage;
 public class ResizedImagePanel extends JPanel {
     private final Font calibri = new Font("Calibri", Font.BOLD, 250);
     protected BufferedImage drawme;
+    protected BufferedImage drawme2;
     private String overlay;
-
+ 
     public void setOverlay(String overlay) {
         this.overlay = overlay;
     }
@@ -21,6 +22,15 @@ public class ResizedImagePanel extends JPanel {
         drawme = getScaledInstance((BufferedImage)img, getScaleFactorToFit(masterSize, getSize()), RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
         invalidate();
         repaint();
+    }
+    
+    public void setImage2(Image img) {
+        if(img == null) {
+            drawme2 = null;
+            return;
+        }
+        Dimension masterSize = new Dimension(img.getWidth(this), img.getHeight(this));
+        drawme2 = getScaledInstance((BufferedImage)img, getScaleFactorToFit(masterSize, getSize()), RenderingHints.VALUE_INTERPOLATION_BILINEAR, true);
     }
 
     @Override
@@ -34,11 +44,17 @@ public class ResizedImagePanel extends JPanel {
             final int x = (getWidth() - drawme.getWidth(this)) / 2;
             final int y = (getHeight() - drawme.getHeight(this)) / 2;
             g.drawImage(drawme, x, y, this);
-            
+
             g.setColor(Color.black);
             g.fillRect(0,0, x, getHeight());
             final int ex = x+drawme.getWidth(this);
             g.fillRect(ex,0, getWidth()-ex, getHeight());
+        }
+
+        if (drawme2 != null) {
+            final int x = (getWidth() - drawme2.getWidth(this)) / 2;
+            final int y = (getHeight() - drawme2.getHeight(this)) / 2;
+            g.drawImage(drawme2, x, y, this);
         }
         
         if (overlay != null) {
@@ -79,7 +95,7 @@ public class ResizedImagePanel extends JPanel {
         int w = (int) Math.round(img.getWidth() * dScaleFactor);
         int h = (int) Math.round(img.getHeight() * dScaleFactor);
 
-        BufferedImage tmp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        BufferedImage tmp = new BufferedImage(w, h, img.getColorModel().hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = tmp.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
         g2.drawImage(img, 0, 0, w, h, null);
