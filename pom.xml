@@ -6,7 +6,7 @@
 
     <groupId>me.hajo</groupId>
     <artifactId>sony-photobox</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <repositories>
         <repository>
@@ -41,6 +41,9 @@
             <version>4.1</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.sun/rt -->
+        
+
     </dependencies>
 
 
@@ -53,6 +56,10 @@
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
+                                    <fork>true</fork>
+                    <compilerArgs>
+                        <arg>-XDignore.symbol.file</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -67,7 +74,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.dstovall</groupId>
+                <groupId>com.jolira</groupId>
                 <artifactId>onejar-maven-plugin</artifactId>
                 <version>1.4.4</version>
                 <executions>

@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class Liveview extends ResizedImagePanel {
     
@@ -36,7 +37,13 @@ public class Liveview extends ResizedImagePanel {
         public void run() {
             try {
                 while(true) {
-                    final byte[] data = stream2decoder.take();
+                    byte[] data = stream2decoder.take();
+                    while(true) {
+                        final byte[] odata = stream2decoder.peek();
+                        if(odata == null) break;
+                        stream2decoder.remove(odata);
+                        data = odata;
+                    }
                     final BufferedImage image = new JPEGImageDecoderImpl(new ByteArrayInputStream(data)).decodeAsBufferedImage();
                     decoder2view.put(image);
                 }
